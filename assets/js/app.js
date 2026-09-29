@@ -272,16 +272,16 @@ function lbRowHtml(p, disc, i) {
   const topCls = p.pl <= 3 ? `top${p.pl}` : '';
   if (disc === 'duplicate') return `<tr class="enter ${topCls}" data-key="${p.lic}" style="animation-delay:${Math.min(i, 40) * 18}ms">
     <td class="pl">${fmt(p.pl)}${medal}</td>
-    <td class="who"><span class="nm">${esc(fullName(p))}</span>${p.nw ? '<span class="badge-new">NOUVEAU</span>' : ''}
-      <div class="meta">${flagTag(p.pay)} club ${esc(p.club || '—')}</div></td>
+    <td class="who"><span class="nm">${flagTag(p.pay)} ${esc(fullName(p))}</span>${p.nw ? '<span class="badge-new">NOUVEAU</span>' : ''}
+      <div class="meta">club ${esc(p.club || '—')}</div></td>
     <td><span class="tag ${serieClass(p.s26)}">${esc(p.s26)}</span>${serieChange(p)}</td>
     <td class="num"><span class="score" data-count="${ownSVal(p)}" data-dec="2">0</span><div class="meta" style="color:var(--dim);font-size:.72rem">%S${ownSerieNum(p) || '—'} (sa série)</div></td>
     <td class="num"><span class="delta ${d.cls}">${d.label}</span></td>
   </tr>`;
   return `<tr class="enter ${topCls}" data-key="${p.lic}" style="animation-delay:${Math.min(i, 40) * 18}ms">
     <td class="pl">${fmt(p.pl)}${medal}</td>
-    <td class="who"><span class="nm">${esc(fullName(p))}</span>${p.nw ? '<span class="badge-new">NOUVEAU</span>' : ''}
-      <div class="meta">${flagTag(p.pay)} club ${esc(p.club || '—')}</div></td>
+    <td class="who"><span class="nm">${flagTag(p.pay)} ${esc(fullName(p))}</span>${p.nw ? '<span class="badge-new">NOUVEAU</span>' : ''}
+      <div class="meta">club ${esc(p.club || '—')}</div></td>
     <td><span class="tag ${serieClass(p.s26)}">${esc(p.s26)}</span>${serieChange(p)}</td>
     <td class="num"><span class="score" data-count="${p.cote}" data-dec="0">0</span></td>
     <td class="num">${fmt(p.v)} / ${fmt(p.n)} / ${fmt(p.d)}<div class="meta" style="color:var(--dim);font-size:.72rem">V · N · D (${fmt(p.matchs)})</div></td>
@@ -297,8 +297,8 @@ function lbCardHtml(p, disc, i) {
     : `<span class="score" data-count="${p.cote}" data-dec="0">0</span><small> pts</small>`;
   return `<div class="card" data-key="${p.lic}" style="animation-delay:${Math.min(i, 40) * 18}ms">
     <div class="rank">#${fmt(p.pl)} ${p.pl <= 3 ? ['🥇', '🥈', '🥉'][p.pl - 1] : ''}</div>
-    <h4>${esc(fullName(p))}${p.nw ? '<span class="badge-new">NOUVEAU</span>' : ''}</h4>
-    <div class="meta">${flagTag(p.pay)} ${esc(p.club || '—')}</div>
+    <h4>${flagTag(p.pay)} ${esc(fullName(p))}${p.nw ? '<span class="badge-new">NOUVEAU</span>' : ''}</h4>
+    <div class="meta">${esc(p.club || '—')}</div>
     <div class="foot"><span class="tag ${serieClass(p.s26)}">${esc(p.s26)}</span><span>${main}</span></div>
     <div class="meta" style="margin-top:.35rem"><span class="delta ${d.cls}">${d.label}</span>${serieChange(p)}</div>
   </div>`;
@@ -586,8 +586,11 @@ function barresPanel() {
     <div class="grid-2">
       <div>
         <table class="preview-table"><thead><tr><th>Série</th><th>Barre (%)</th></tr></thead><tbody>
-          ${b.barres.map(([s, v]) => `<tr><td><span class="tag ${serieClass(s)}">${esc(s)}</span></td><td>${fmt(v, 2)} %</td></tr>`).join('')}
+          ${b.barres.map(([s, v]) => `<tr><td>${s === '3/4'
+            ? '<span class="tag" title="Barre commune aux séries 3 et 4 (regroupement officiel FISF en duplicate)">3/4 · séries 3&amp;4</span>'
+            : `<span class="tag ${serieClass(s)}">${esc(s)}</span>`}</td><td>${fmt(v, 2)} %</td></tr>`).join('')}
         </tbody></table>
+        <p class="panel-note">« 3/4 » est une <strong>barre commune</strong> aux séries 3 et 4 : en duplicate FISF, ces deux séries forment un regroupement officiel dont le seuil de maintien est partagé. Valeurs issues de l'onglet « Barres et quotas » du classement.</p>
       </div>
       <div>
         <table class="preview-table"><thead><tr><th>Fédération</th><th>S1</th><th>S2</th><th>S3</th><th>S4</th><th>S5</th><th>S6</th></tr></thead><tbody>
@@ -667,10 +670,10 @@ function renderPlayer(v, disc, lic) {
     <div class="player-hero">
       <div class="avatar">${prof.photo ? `<img src="${esc(prof.photo)}" alt="">` : esc(initials(p))}</div>
       <div>
-        <h1>${esc(fullName(p))} ${p.nw ? '<span class="badge-new">NOUVEAU</span>' : ''}</h1>
+        <h1>${flagTag(p.pay)} ${esc(fullName(p))} ${p.nw ? '<span class="badge-new">NOUVEAU</span>' : ''}</h1>
         <div class="meta">
           <span><span class="tag ${serieClass(p.s26)}">${esc(p.s26)}</span>${serieChange(p)}</span>
-          <span>${flagTag(p.pay)} club ${esc(p.club || '—')}</span>
+          <span>club ${esc(p.club || '—')}</span>
           <span>féd. ${esc(p.fed || '—')}</span>
           <span>licence ${esc(p.lic)}</span>
           <span class="delta ${d.cls}">${d.label}</span>
