@@ -22,7 +22,17 @@ const FLAGS = {
   ES: '🇪🇸', US: '🇺🇸', RE: '🇷🇪'
 };
 const flag = c => FLAGS[String(c || '').toUpperCase()] || '🏳️';
-const flagTag = c => `<span class="flag" role="img" aria-label="${esc(c)}" title="${esc(c)}">${flag(c)}</span>`;
+/* Drapeaux : images PNG locales — les émojis drapeaux ne s'affichent pas sous Windows */
+const FLAG_FILES = new Set(['FR', 'QC', 'BE', 'CD', 'BJ', 'CH', 'SN', 'CI', 'CM', 'NE', 'BF', 'TN',
+  'MA', 'CG', 'LB', 'TG', 'GA', 'ML', 'MU', 'MG', 'MR', 'IT', 'GN', 'RO', 'TD', 'DZ', 'GR', 'UK',
+  'LU', 'MC', 'NZ', 'NG', 'CF', 'KM', 'CA', 'NL', 'DE', 'SE', 'PT', 'BG', 'ES', 'US', 'RE']);
+const flagTag = c => {
+  const code = String(c || '').toUpperCase();
+  if (FLAG_FILES.has(code)) {
+    return `<img class="flag" src="assets/img/flags/${code}.png" alt="${esc(code)}" title="${esc(code)}" width="20" height="15" loading="lazy">`;
+  }
+  return `<span class="flag flag-emoji" role="img" aria-label="${esc(code)}" title="${esc(code)}">${flag(code)}</span>`;
+};
 
 /* Séries pertinentes pour un joueur : la sienne, celle d'avant et celle d'après.
    Série 1 -> S1,S2 · Série 2 -> S1,S2,S3 · … · Série 6 -> S5,S6 */
@@ -367,7 +377,7 @@ function renderLeaderboard(v, disc) {
   const paySel = $('#f-pay', v);
   const sorted = Object.entries(D.countries).sort((a, b) => b[1] - a[1]);
   paySel.innerHTML = '<option value="">Tous les pays</option>' +
-    sorted.map(([c, n]) => `<option value="${esc(c)}" ${LB.pay === c ? 'selected' : ''}>${flag(c)} ${esc(c)} (${fmt(n)})</option>`).join('');
+    sorted.map(([c, n]) => `<option value="${esc(c)}" ${LB.pay === c ? 'selected' : ''}>${esc(c)} (${fmt(n)})</option>`).join('');
   paySel.onchange = () => { LB.pay = paySel.value; LB.page = 1; update(true); };
 
   /* séries */

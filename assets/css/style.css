@@ -170,7 +170,9 @@ select.input { padding-right: 1.8rem; }
 .active-filters .af-clear { border-style: dashed; }
 
 /* Drapeaux */
-.flag { display: inline-block; line-height: 1; cursor: help; }
+.flag { display: inline-block; width: 20px; height: 15px; object-fit: cover; border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .35); vertical-align: -2px; cursor: help; }
+.flag-emoji { width: auto; height: auto; font-size: .95em; box-shadow: none; }
 
 /* Pagination */
 .pager { display: flex; flex-wrap: wrap; gap: .3rem; justify-content: center; align-items: center; margin-top: .9rem; }
