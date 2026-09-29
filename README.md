@@ -19,28 +19,31 @@ python -m http.server 8765
 # puis ouvrir http://localhost:8765/
 ```
 
-## Déployer (GitHub Pages, Netlify, Cloudflare Pages…)
+## Déployer
 
-Le projet est un site 100 % statique : il suffit de publier le dossier.
+Le projet est un site 100 % statique : les données sont pré-générées (`assets/data/data.js`
+est commité), aucun serveur ni build n'est requis côté hébergeur.
 
-- **Netlify / Cloudflare Pages / Vercel** : glisser-déposer le dossier ou connecter le dépôt, aucune commande de build.
-- **GitHub Pages** : pousser sur un dépôt, puis *Settings → Pages → Deploy from branch* (racine), ou utiliser le workflow CI fourni (voir plus bas).
-- **Exporter en un fichier** : `python tools/export.py` produit `dist/classements-fisf-<date>.zip`, déployable tel quel sur n'importe quel hébergeur statique.
+### Option A — GitHub Pages (le plus simple, déjà prêt)
 
-## Déploiement automatique (GitHub Actions)
+Dans le dépôt : **Settings → Pages** → Source : *Deploy from a branch* → branche `dev`,
+dossier `/(root)` → **Save**. Le site est en ligne dans la minute à
+`https://<utilisateur>.github.io/classementsFisf/`. Chaque push sur `dev` met à jour.
 
-Le fichier `.github/workflows/deploy.yml` est fourni : à chaque push sur `main`,
-il régénère les données depuis `archives/`, emballe le site et le publie sur
-GitHub Pages. Dans le dépôt : *Settings → Pages → Source : GitHub Actions* (une fois).
+### Option B — Netlify / Cloudflare Pages / Vercel / hébergeur classique
+
+Glisser-déposer le dossier, ou `python tools/export.py` puis déployer le zip
+`dist/classements-fisf-<date>.zip` (dossier `_site` avec `--dir`).
+
+## Vérification automatique (GitHub Actions)
+
+`.github/workflows/deploy.yml` ne **vérifie** plus qu'il déploie : à chaque push, la CI
+régénère les données depuis `archives/` et échoue si `data.js`/`index.html` commités
+ne sont pas à jour (garde-fou : plus jamais de site publié avec des données périmées).
 
 Mettre à jour le classement devient alors :
-déposer le nouvel XLSX dans `archives/` → `tools\update.bat` (ou `bash tools/update.sh`) → la CI se charge du reste.
-
-> **Dépannage CI** — si le job `deploy` échoue avec `actions/deploy-pages`:
-> le site GitHub Pages n'est pas encore activé. Dans le dépôt :
-> *Settings → Pages → Source : « GitHub Actions »* (une fois), puis relancez le
-> workflow (*Actions → Déployer le site → Re-run jobs*). Le job `build` peut
-> réussir sans ce réglage ; seul le déploiement en dépend.
+déposer le nouvel XLSX dans `archives/` → `tools\update.bat` (ou `bash tools/update.sh`)
+→ build, commit et push ; GitHub Pages se met à jour et la CI vérifie la cohérence.
 
 > Astuce : les graphiques et l'upload XLSX chargent ECharts et SheetJS depuis un CDN.
 > Sans connexion, le site reste utilisable (tableaux, filtres, fiches) et les graphiques

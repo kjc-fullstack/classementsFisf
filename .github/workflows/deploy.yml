@@ -1,18 +1,13 @@
-name: Déployer le site
+name: Verifier le build
 
 on:
   push:
     branches: [main, dev]
+  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: true
 
 jobs:
   build:
@@ -24,27 +19,12 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Régénérer les données depuis archives/
+      - name: Regenerer les donnees depuis archives/
         run: |
           pip install openpyxl
           python tools/build_data.py
 
-      - name: Préparer le dossier publiable
+      - name: Les donnees commitées sont-elles a jour ?
         run: |
-          mkdir -p _site
-          cp index.html README.md _site/
-          cp -r assets _site/
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: "_site"
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          git diff --exit-code -- assets/data/data.js index.html \
+            || (echo "::error::data.js/index.html non regeneres : lancez tools/build_data.py puis committez" && exit 1)
