@@ -26,9 +26,14 @@ est commité), aucun serveur ni build n'est requis côté hébergeur.
 
 ### Option A — GitHub Pages (le plus simple, déjà prêt)
 
-Dans le dépôt : **Settings → Pages** → Source : *Deploy from a branch* → branche `dev`,
+Dans le dépôt : **Settings → Pages** → Source : ***Deploy from a branch*** → branche `dev`,
 dossier `/(root)` → **Save**. Le site est en ligne dans la minute à
 `https://<utilisateur>.github.io/classementsFisf/`. Chaque push sur `dev` met à jour.
+
+> ⚠️ La source doit être **« Deploy from a branch »**, pas « GitHub Actions » :
+> le workflow fourni se contente de *vérifier* le build (il ne déploie rien).
+> Si le site semble « figé » (anciennes versions servies), c'est ce réglage qui
+> a basculé — repassez-le sur *Deploy from a branch* → `dev` → Save.
 
 ### Option B — Netlify / Cloudflare Pages / Vercel / hébergeur classique
 
