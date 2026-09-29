@@ -1,0 +1,10 @@
+# Normalisation des fins de ligne et diffs propres
+* text=auto
+
+# Fichiers générés : ne pas polluer les diffs
+assets/data/data.js -diff
+
+# Formats binaires
+*.xlsx binary
+*.png binary
+*.zip binary

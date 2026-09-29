@@ -34,7 +34,13 @@ il régénère les données depuis `archives/`, emballe le site et le publie sur
 GitHub Pages. Dans le dépôt : *Settings → Pages → Source : GitHub Actions* (une fois).
 
 Mettre à jour le classement devient alors :
-déposer le nouvel XLSX dans `archives/` → commit → push → le site se met à jour tout seul.
+déposer le nouvel XLSX dans `archives/` → `tools\update.bat` (ou `bash tools/update.sh`) → la CI se charge du reste.
+
+> **Dépannage CI** — si le job `deploy` échoue avec `actions/deploy-pages`:
+> le site GitHub Pages n'est pas encore activé. Dans le dépôt :
+> *Settings → Pages → Source : « GitHub Actions »* (une fois), puis relancez le
+> workflow (*Actions → Déployer le site → Re-run jobs*). Le job `build` peut
+> réussir sans ce réglage ; seul le déploiement en dépend.
 
 > Astuce : les graphiques et l'upload XLSX chargent ECharts et SheetJS depuis un CDN.
 > Sans connexion, le site reste utilisable (tableaux, filtres, fiches) et les graphiques
