@@ -1,0 +1,33 @@
+# --- Généré (ne jamais versionner) ---
+dist/
+_site/
+
+# --- Python (tools/) ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+
+# --- Node (au cas où des outils seraient ajoutés) ---
+node_modules/
+npm-debug.log*
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Éditeurs / IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# --- Logs et secrets locaux ---
+*.log
+.env
+.env.*
