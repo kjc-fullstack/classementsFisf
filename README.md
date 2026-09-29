@@ -68,6 +68,14 @@ devient le classement courant, le précédent sert à calculer les vraies places
 antérieures (`pv`) et l'historique du top 200 (bump charts). Tant qu'un seul snapshot
 existe, ces valeurs sont **simulées** (bandeau d'avertissement affiché sur le site).
 
+> **Cache-busting** — `index.html` référence les assets avec un jeton de version :
+> `data.js` suit la date du snapshot (mise à jour automatique par le script),
+> `style.css` et `app.js` suivent la constante `CODE_VERSION` en tête de
+> `tools/build_data.py`. **Après toute modification de `app.js`/`style.css` sans
+> nouvelle donnée**, faites évoluer `CODE_VERSION` (format `AAAA-MM-JJ`) puis
+> committez — sinon les visiteurs garderont l'ancien code en cache et la CI
+> échouera sur le contrôle de cohérence.
+
 ### Voie rapide — panneau Admin (navigateur, local)
 
 `#/admin` (mot de passe par défaut : `fisf2026`) → *Publier un classement* :
