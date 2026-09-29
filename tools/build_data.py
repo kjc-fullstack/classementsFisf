@@ -35,6 +35,7 @@ OUT = ROOT / "assets" / "data" / "data.js"
 
 HIST_TOP = 200          # nombre de joueurs dont on conserve l'historique complet
 HIST_LEN = 5            # nombre de points d'historique (snapshots)
+CODE_VERSION = "2026-09-29"  # version du code (css/js) : a faire evoluer a chaque modif de code
 SERIES_PCT_RE = re.compile(r"^%s([1-6])\s*25-?26$")
 BARRE_LABEL_RE = re.compile(r"^(3/4|\d[A-D]?)$")
 
@@ -326,12 +327,18 @@ def main():
     mb = OUT.stat().st_size / 1e6
     print(f"Écrit : {OUT} ({mb:.2f} Mo)")
     # Cache-busting : horodate les références d'assets dans index.html pour que
-    # les navigateurs rechargent css/js/data après chaque génération.
+    # les navigateurs rechargent css/js/data après chaque modification.
+    # - data.js : version = date du snapshot (regénéré à chaque build)
+    # - style.css / app.js : version = CODE_VERSION (à faire évoluer à chaque
+    #   modification de code sans régénération de données)
     idx = ROOT / "index.html"
     html = idx.read_text(encoding="utf-8")
-    html = re.sub(r"(\?v=)[0-9]{4}-[0-9]{2}-[0-9]{2}", r"\g<1>" + current["date"], html)
+    html = re.sub(r"(assets/data/data\.js\?v=)[0-9]{4}-[0-9]{2}-[0-9]{2}",
+                  r"\g<1>" + current["date"], html)
+    html = re.sub(r"((?:assets/css/style\.css|assets/js/app\.js)\?v=)[0-9]{4}-[0-9]{2}-[0-9]{2}",
+                  r"\g<1>" + CODE_VERSION, html)
     idx.write_text(html, encoding="utf-8")
-    print(f"index.html mis à jour (?v={current['date']})")
+    print(f"index.html mis a jour (data v={current['date']}, code v={CODE_VERSION})")
     if only_one:
         print("NOTE : un seul snapshot -> places precedentes et historique SIMULES "
               "(data.simulated=true). Déposez les classements passés dans archives/ "
